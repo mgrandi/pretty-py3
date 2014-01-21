@@ -59,7 +59,9 @@ default space.  `p.pretty` prettyprints another object using the pretty print
 method.
 
 The first parameter to the `group` function specifies the extra indentation
-of the next line.  In this example the next item will either be not
+of the next line. The second and the third parameter are the opening and 
+closing strings that will be printed before and after the group.
+In this example the next item will either be not
 breaked (if the items are short enough) or aligned with the right edge of
 the opening bracked of `MyList`.
 
