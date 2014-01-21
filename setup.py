@@ -3,7 +3,7 @@ setup(
     name='pretty-py3',
     author='Mark Grandi',
     author_email='markgrandi@gmail.com',
-    version='0.2.1',
+    version='0.2.2',
     url='https://github.com/mgrandi/pretty-py3',
     py_modules=['pretty'],
     description='extensible pprint successor - python3 version',
