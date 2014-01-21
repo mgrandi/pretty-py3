@@ -1,8 +1,5 @@
 # -*- coding: utf-8 -*-
 """
-    pretty
-    ~~
-
     Python advanced pretty printer.  This pretty printer is intended to
     replace the old `pprint` python module which does not allow developers
     to provide their own pretty print callbacks.
@@ -106,8 +103,9 @@ import sys
 import types
 import re
 import datetime
-from StringIO import StringIO
+from io import StringIO
 from collections import deque
+import contextlib
 
 
 __all__ = ['pretty', 'pprint', 'PrettyPrinter', 'RepresentationPrinter', 'for_type']
@@ -138,14 +136,10 @@ def pprint(obj, verbose=False, max_width=79, newline='\n'):
     sys.stdout.flush()
 
 
-# add python2.5 context managers if we have the with statement feature
-if hasattr(__future__, 'with_statement'): exec '''
-from __future__ import with_statement
-from contextlib import contextmanager
 
 class _PrettyPrinterBase(object):
 
-    @contextmanager
+    @contextlib.contextmanager
     def indent(self, indent):
         """with statement support for indenting/dedenting."""
         self.indentation += indent
@@ -154,7 +148,7 @@ class _PrettyPrinterBase(object):
         finally:
             self.indentation -= indent
 
-    @contextmanager
+    @contextlib.contextmanager
     def group(self, indent=0, open='', close=''):
         """like begin_group / end_group but for the with statement."""
         self.begin_group(indent, open)
@@ -163,15 +157,7 @@ class _PrettyPrinterBase(object):
                 yield
         finally:
             self.end_group(indent, close)
-'''
-else:
-    class _PrettyPrinterBase(object):
 
-        def _unsupported(self, *a, **kw):
-            """unsupported operation"""
-            raise RuntimeError('not available in this python version')
-        group = indent = _unsupported
-        del _unsupported
 
 
 class PrettyPrinter(_PrettyPrinterBase):
@@ -211,17 +197,19 @@ class PrettyPrinter(_PrettyPrinterBase):
 
     def text(self, obj):
         """Add literal text to the output."""
-        width = len(obj)
+
+        objStr = str(obj)
+        width = len(objStr)
         if self.buffer:
             text = self.buffer[-1]
             if not isinstance(text, Text):
                 text = Text()
                 self.buffer.append(text)
-            text.add(obj, width)
+            text.add(objStr, width)
             self.buffer_width += width
             self._break_outer_groups()
         else:
-            self.output.write(obj)
+            self.output.write(objStr) # TODO FIX
             self.output_width += width
 
     def breakable(self, sep=' '):
@@ -355,7 +343,7 @@ class Text(Printable):
 
     def output(self, stream, output_width):
         for obj in self.objs:
-            stream.write(obj)
+            stream.write(str(obj)) # TODO FIX
         return output_width + self.width
 
     def add(self, obj, width):
@@ -424,7 +412,7 @@ class GroupQueue(object):
             pass
 
 
-_baseclass_reprs = (object.__repr__, types.InstanceType.__repr__)
+_baseclass_reprs = (object.__repr__)
 
 
 def _default_pprint(obj, p, cycle):
@@ -499,7 +487,7 @@ def _dict_pprinter_factory(start, end):
         keys = obj.keys()
         try:
             keys.sort()
-        except Exception, e:
+        except Exception as e:
             # Sometimes the keys don't sort.
             pass
         for idx, key in enumerate(keys):
@@ -600,25 +588,19 @@ except NameError:
 #: printers for builtin types
 _type_pprinters = {
     int:                        _repr_pprint,
-    long:                       _repr_pprint,
     float:                      _repr_pprint,
     str:                        _repr_pprint,
-    unicode:                    _repr_pprint,
     tuple:                      _seq_pprinter_factory('(', ')'),
     list:                       _seq_pprinter_factory('[', ']'),
     dict:                       _dict_pprinter_factory('{', '}'),
-    types.DictProxyType:        _dict_pprinter_factory('<dictproxy {', '}>'),
     set:                        _seq_pprinter_factory('set([', '])'),
     frozenset:                  _seq_pprinter_factory('frozenset([', '])'),
     super:                      _super_pprint,
     _re_pattern_type:           _re_pattern_pprint,
     type:                       _type_pprint,
-    types.ClassType:            _type_pprint,
     types.FunctionType:         _function_pprint,
     types.BuiltinFunctionType:  _function_pprint,
-    types.SliceType:            _repr_pprint,
     types.MethodType:           _repr_pprint,
-    xrange:                     _repr_pprint,
     datetime.datetime:          _repr_pprint,
     datetime.timedelta:         _repr_pprint,
     _exception_base:            _exception_pprint
@@ -658,6 +640,6 @@ if __name__ == '__main__':
             self.list = ["blub", "blah", self]
 
         def get_foo(self):
-            print "foo"
+            print ("foo")
 
     pprint(Foo(), verbose=True)
