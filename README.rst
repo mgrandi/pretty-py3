@@ -1,3 +1,7 @@
+
+Pretty
+******
+
 Python advanced pretty printer.  This pretty printer is intended to
 replace the old `pprint` python module which does not allow developers
 to provide their own pretty print callbacks.
