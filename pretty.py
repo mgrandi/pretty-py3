@@ -385,7 +385,7 @@ class GroupQueue(object):
             pass
 
 
-_baseclass_reprs = (object.__repr__)
+_baseclass_reprs = (object.__repr__,)
 
 
 def _default_pprint(obj, p, cycle):
