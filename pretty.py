@@ -566,7 +566,7 @@ _type_pprinters = {
     tuple:                      _seq_pprinter_factory('(', ')'),
     list:                       _seq_pprinter_factory('[', ']'),
     dict:                       _dict_pprinter_factory('{', '}'),
-    set:                        _seq_pprinter_factory('set([', '])'),
+    set:                        _seq_pprinter_factory('{', '}'),
     frozenset:                  _seq_pprinter_factory('frozenset([', '])'),
     super:                      _super_pprint,
     _re_pattern_type:           _re_pattern_pprint,
