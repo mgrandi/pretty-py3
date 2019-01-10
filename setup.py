@@ -3,7 +3,7 @@ setup(
     name='pretty-py3',
     author='Mark Grandi',
     author_email='markgrandi@gmail.com',
-    version='0.2.2',
+    version='0.2.4',
     url='https://github.com/mgrandi/pretty-py3',
     py_modules=['pretty'],
     description='extensible pprint successor - python3 version',
@@ -69,11 +69,35 @@ default space.  `p.pretty` prettyprints another object using the pretty print
 method.
 
 The first parameter to the `group` function specifies the extra indentation
-of the next line. The second and the third parameter are the opening and 
+of the next line. The second and the third parameter are the opening and
 closing strings that will be printed before and after the group.
 In this example the next item will either be not
 breaked (if the items are short enough) or aligned with the right edge of
 the opening bracked of `MyList`.
+
+Changelog
+=========
+
+0.2.4
+-----
+- Merged pull request #2 (https://github.com/mgrandi/pretty-py3/pull/2) from @alexshpilkin,
+"Fix double indentation in PrettyPrinter.group()"
+- Merged pull request #3 (https://github.com/mgrandi/pretty-py3/pull/3) from @alexshpilkin,
+"Better support for set and OrderedDict types"
+
+
+0.2.3
+-----
+- Merged pull request #1 (https://github.com/mgrandi/pretty-py3/pull/1) from @avoidscorn,
+"Add missing comma in single-element tuple."
+
+0.2.2
+-----
+- Finish porting it to python3
+
+
+Copyright
+=========
 
 :copyright: 2007 by Armin Ronacher.
 :copyright: 2014 by Mark Grandi - python 3 port
