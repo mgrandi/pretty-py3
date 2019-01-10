@@ -77,7 +77,7 @@ import types
 import re
 import datetime
 from io import StringIO
-from collections import deque
+from collections import deque, OrderedDict
 import contextlib
 
 
@@ -474,6 +474,19 @@ def _dict_pprinter_factory(start, end):
     return inner
 
 
+def _ordereddict_pprint(obj, p, cycle):
+    """The pprint for collections.OrderedDict."""
+    if cycle:
+        return p.text('OrderedDict([...])')
+    p.begin_group(13, 'OrderedDict([')
+    for idx, item in enumerate(obj.items()):
+        if idx:
+            p.text(',')
+            p.breakable()
+        p.pretty(item)
+    p.end_group(13, '])')
+
+
 def _super_pprint(obj, p, cycle):
     """The pprint for the super type."""
     p.begin_group(8, '<super: ')
@@ -566,7 +579,8 @@ _type_pprinters = {
     tuple:                      _seq_pprinter_factory('(', ')'),
     list:                       _seq_pprinter_factory('[', ']'),
     dict:                       _dict_pprinter_factory('{', '}'),
-    set:                        _seq_pprinter_factory('set([', '])'),
+    OrderedDict:                _ordereddict_pprint,
+    set:                        _seq_pprinter_factory('{', '}'),
     frozenset:                  _seq_pprinter_factory('frozenset([', '])'),
     super:                      _super_pprint,
     _re_pattern_type:           _re_pattern_pprint,
