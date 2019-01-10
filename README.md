@@ -5,6 +5,7 @@ replace the old `pprint` python module which does not allow developers
 to provide their own pretty print callbacks.
 
 This module is based on ruby's `prettyprint.rb` library by `Tanaka Akira`.
+
 This was converted to python3 by `Mark Grandi` and others
 
 
@@ -94,5 +95,7 @@ the opening bracked of `MyList`.
 ## Copyright
 
 `copyright 2007` by Armin Ronacher.
+
 `copyright 2014` by Mark Grandi - python 3 port
+
 `license` BSD License.
